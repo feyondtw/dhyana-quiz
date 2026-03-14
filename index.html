@@ -18,8 +18,11 @@
 /* ── INTRO ── */
 #dq #di{
   display:none!important;
-  background:#FDFAF5!important;
-  padding:4rem 2rem 3.5rem!important;
+  background:#0D1117!important;
+  min-height:100vh!important;
+  padding:0!important;
+  overflow:hidden!important;
+  position:relative!important;
 }
 #dq #di.don{
   display:flex!important;
@@ -27,6 +30,16 @@
   align-items:center!important;
   justify-content:center!important;
   text-align:center!important;
+}
+#dq .di-stars{
+  position:absolute!important;inset:0!important;
+  pointer-events:none!important;z-index:0!important;
+}
+#dq .di-content{
+  position:relative!important;z-index:1!important;
+  display:flex!important;flex-direction:column!important;
+  align-items:center!important;padding:3rem 2rem 4rem!important;
+  max-width:640px!important;width:100%!important;
 }
 #dq .dbtag{
   display:block!important;
@@ -186,20 +199,208 @@
 #dq .drsteps li::before{content:'—'!important;position:absolute!important;left:0!important;color:#97C459!important}
 #dq .dclosing{display:block!important;background:#fff!important;border:1px solid #D3D1C7!important;border-left:3px solid #3B6D11!important;border-radius:0 12px 12px 0!important;padding:16px 18px!important;margin-bottom:2rem!important;font-family:'Lora',serif!important;font-style:italic!important;font-size:14px!important;color:#5F5E5A!important;line-height:1.85!important}
 #dq .dbreset{display:block!important;width:100%!important;max-width:240px!important;margin:0 auto!important;font-family:'DM Sans',sans-serif!important;font-size:14px!important;color:#888780!important;background:#fff!important;border:1px solid #D3D1C7!important;border-radius:40px!important;padding:11px!important;cursor:pointer!important;text-align:center!important;-webkit-appearance:none!important;appearance:none!important}
+
+/* ── ANIMATIONS ── */
+@keyframes dhFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dhFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes dhCharIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dhSlideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+#dq .dh-anim-fade{animation:dhFadeIn .5s ease both!important}
+#dq .dh-anim-up{animation:dhFadeUp .45s ease both!important}
+#dq .dh-char{display:inline-block!important;opacity:0!important}
+#dq .dh-char.dh-char-in{animation:dhCharIn .4s ease both!important}
+#dq .dh-result-item{opacity:0!important;transform:translateY(16px)!important;transition:opacity .5s ease,transform .5s ease!important}
+#dq .dh-result-item.dh-in{opacity:1!important;transform:translateY(0)!important}
+#dq .dh-fade-wrap{opacity:0!important;transition:opacity .35s ease!important}
+#dq .dh-fade-wrap.dh-visible{opacity:1!important}
+
+/* ── SOUND BUTTON ── */
+#dh-snd-btn{
+  position:fixed!important;bottom:24px!important;right:24px!important;z-index:9999!important;
+  width:48px!important;height:48px!important;border-radius:50%!important;
+  background:#FDFAF5!important;border:1.5px solid #D3D1C7!important;
+  cursor:pointer!important;display:flex!important;align-items:center!important;
+  justify-content:center!important;transition:border-color .2s,background .2s!important;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08)!important;
+}
+#dh-snd-btn:hover{border-color:#3B6D11!important;background:#EAF3DE!important}
+#dh-snd-btn svg{width:20px!important;height:20px!important;flex-shrink:0!important}
+#dh-snd-btn .dh-snd-waves{opacity:0!important;transition:opacity .3s!important}
+#dh-snd-btn.dh-snd-on .dh-snd-waves{opacity:1!important}
+#dh-snd-btn.dh-snd-on{border-color:#3B6D11!important;background:#EAF3DE!important}
 </style>
 </head>
 <body>
+
+<style>
+/* ── STANDALONE STARFIELD INTRO — outside #dq reset scope ── */
+#dh-intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0A0E1A;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#dh-intro-overlay.dh-hiding {
+  transition: opacity 1s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+#dh-stars-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+#dh-intro-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 2rem 3rem;
+  max-width: 580px;
+  width: 100%;
+}
+#dh-intro-content * { box-sizing: border-box; }
+.dhi-btag {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: .2em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  margin-bottom: 1.8rem;
+  opacity: 0;
+  transition: opacity .8s ease, transform .8s ease;
+  transform: translateY(10px);
+}
+.dhi-dedication {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: clamp(13px,2vw,15px);
+  color: rgba(255,255,240,0.5);
+  margin-bottom: 2rem;
+  line-height: 1.9;
+  opacity: 0;
+  transition: opacity .8s ease, transform .8s ease;
+  transform: translateY(10px);
+}
+.dhi-title {
+  font-family: 'Lora', serif;
+  font-size: clamp(30px,6vw,50px);
+  font-weight: 400;
+  color: #F5F0E8;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transition: opacity .8s ease, transform .8s ease;
+  transform: translateY(10px);
+}
+.dhi-rule {
+  width: 40px;
+  height: 1px;
+  background: rgba(151,196,89,0.6);
+  margin: 0 auto 1.8rem;
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+.dhi-poem {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: clamp(13px,1.9vw,15px);
+  color: rgba(255,255,240,0.55);
+  line-height: 2;
+  margin-bottom: 1rem;
+  opacity: 0;
+  transition: opacity .8s ease, transform .8s ease;
+  transform: translateY(8px);
+}
+.dhi-poem2 {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: clamp(12px,1.7vw,13px);
+  color: rgba(255,255,240,0.35);
+  line-height: 2;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  transition: opacity .8s ease, transform .8s ease;
+  transform: translateY(8px);
+}
+#dh-start-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #0A0E1A;
+  background: #C8DFA0;
+  border: none;
+  border-radius: 40px;
+  padding: 14px 44px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .8s ease, background .2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+#dh-start-btn:hover { background: #B5D280; }
+.dhi-note {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: .06em;
+  margin-top: 1rem;
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+.dhi-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+</style>
+
+<div id="dh-intro-overlay">
+  <canvas id="dh-stars-canvas"></canvas>
+  <div id="dh-intro-content">
+    <div class="dhi-btag" id="dhi-btag">DHYANA · 舒眠精油診</div>
+    <div class="dhi-dedication" id="dhi-ded">致 那些在深夜裡，找不到降落航道的靈魂。</div>
+    <div class="dhi-title" id="dhi-title">你是哪一種失眠？</div>
+    <div class="dhi-rule" id="dhi-rule"></div>
+    <div class="dhi-poem" id="dhi-poem">
+      黑夜不該是寂寞的流浪，<br>
+      而是與身體最深處的溫柔對話。<br>
+      當腦中的喧囂蓋過了睡意，當緊繃的肢體遺忘了放鬆，<br>
+      你並非迷失，只是還在尋找那抹能帶你回家的香氣。
+    </div>
+    <div class="dhi-poem2" id="dhi-poem2">
+      在這裡，我們不談醫學，只聊感官。<br>
+      透過這份尋香地圖，校準你此刻的生理座標，<br>
+      讓植物的甘露化作引路微光，<br>
+      穿透焦慮的迷霧，陪你安穩地，降落在夢境最柔軟的地方。
+    </div>
+    <button type="button" id="dh-start-btn">校準我的睡眠座標 →</button>
+    <div class="dhi-note" id="dhi-note">三個問題 · 約 2 分鐘 · 16 種專屬配方</div>
+  </div>
+</div>
+
 <div id="dq">
 
+<button type="button" id="dh-snd-btn" title="環境音開關">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M11 5L6 9H3v6h3l5 4V5z" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <g class="dh-snd-waves">
+      <path d="M15.5 8.5a5 5 0 0 1 0 7" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <path d="M18.5 6a9 9 0 0 1 0 12" stroke="#3B6D11" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.5"/>
+    </g>
+  </svg>
+</button>
+
+
   <!-- INTRO -->
-  <div id="di" class="ds don">
-    <span class="dbtag">DHYANA · 舒眠精油診</span>
-    <span class="dititle">你是哪一種失眠？</span>
-    <div class="drule"></div>
-    <span class="diquote">「在為自己選擇專屬寧靜精油前，<br>請先閉上眼，感受一下此刻你的身體與心靈，<br>正被哪一種感覺困住？」</span>
-    <button type="button" class="dbgo" id="dh-start-btn">開始我的精油診療 →</button>
-    <span class="dinote">三個問題 · 約 2 分鐘 · 16 種專屬配方</span>
-  </div>
+  <div id="di" class="ds" style="display:none"></div>
 
   <!-- QUIZ -->
   <div id="dqz" class="ds">
@@ -228,177 +429,134 @@
 </div>
 <script>
 (function(){
-var Qs=[
-  {id:'q1',eye:'第一題 · 入睡狀況',head:'通常，你的夜晚是什麼感覺？',sub:'選擇最符合你最近一個月的描述',
-   opts:[
-    {k:'1',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M14 23 c-2-1-3-3-2-5 c1-2 3-3 5-2 c0-2 1-4 3-5 c2-1 5 0 6 2 c1-1 3-1 4 0 c2 1 2 3 1 5 c1 1 1 3 0 4 c-1 2-3 2-4 2 c0 1-1 2-2 3 c-1 0-2 0-3-1 c-1 1-3 1-4 0 c-1-1-1-2-1-3 M16 21 c1-1 2-1 3 0 M21 18 c0 1 0 2-1 3 M25 20 c1 0 2 1 2 2 M20 26 c1 0 1 0 2 0 M21 28 c0 1 0 2 0 3 M21 31 c-1 0-1 0-2 0" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',nm:'腦內劇院：入睡困難型',eg:'Cognitive Hyperarousal',dt:'躺下時，大腦像關不掉的放映機，不斷重播今天的對話或明天的計畫？交感神經像壞掉的開關，同時對未知的明天感到不安與茫然。'},
-    {k:'2',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M22 30s-9-6-9-12a6 6 0 0 1 9-5.2A6 6 0 0 1 31 18c0 6-9 12-9 12z" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 19l2 3 2-3" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',nm:'玻璃心靈：淺眠易醒型',eg:'Sleep-Maintenance Insomnia',dt:'能睡著，但睡眠薄得像一層蟬翼，窗外一點水聲、枕邊人的呼吸，都能把你驚醒？哪怕是輕柔的自然音樂，都如同躁樂般令你難受。'},
-    {k:'3',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M22 11 c1 0 3 1 3 2 c0 1-1 2-2 2 c1 0 2 1 2 1 c0 1-1 2-2 2 c1 0 1 1 1 1 c0 1-1 1-2 1" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 24 c0-3 2-5 5-5 c3 0 5 2 5 5 c0 2-1 4-2 5 c-1 1-2 1-3 1 c-1 0-2 0-3-1 c-1-1-2-3-2-5 z" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linejoin="round"/><path d="M17 24 c-1-1-2-2-1-3 l2-1 M27 24 c1-1 2-2 1-3 l-2-1" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round"/><circle cx="20" cy="25" r="1" fill="#3B6D11"/><circle cx="24" cy="25" r="1" fill="#3B6D11"/><path d="M20 28 c1 1 3 1 4 0" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round"/></svg>',nm:'繃緊的身心弦：壓力型失眠',eg:'Hyperarousal Insomnia',dt:'你感到莫名的心慌，明明很累卻「累到睡不著」，身體像一根拉到極限的橡皮筋？孩子的狀態、家人之間的互動，都牽動著你的神經。'},
-    {k:'4',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M23 12 c1 0 2 1 2 2 c0 1-1 2-2 2 c-1 0-2-1-2-2 c0-1 1-2 2-2 M21 16 c-1 1-2 2-2 3 c0 1 0 2 1 2 c1 1 2 0 3-1 c1-1 1-2 1-3 M19 21 c-2 1-3 3-3 5 c0 1 1 2 2 3 c1 1 3 1 5 1 c2 0 4 0 5-1 M17 29 c-1 0-2 1-2 1 c1 1 3 1 4 1 c2 0 4 0 5-1 c1-1 1-2 0-2 M22 21 c1 2 1 4 0 6" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',nm:'身體的抗議：不適導致的失眠',eg:'Pain-Related Insomnia',dt:'是身體的隱隱作痛、緊繃的肩頸，或是燥熱的發炎感，讓你無法安穩翻身？'}
-  ]},
-  {id:'q2',eye:'第二題 · 深夜的側寫',head:'在燈火漸暗的這 1-2 小時裡，你的靈魂通常停留在哪裡？',sub:'「這決定了我們該如何為你調配這份寧靜。」',
-   opts:[
-    {k:'a',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M22 13c-5 0-8 2-8 5s1 4 2 5l-1 6 4-2c1 .5 2 .5 3 .5 5 0 8-2 8-5s-3-9.5-8-9.5z" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',nm:'螢幕前的馬拉松',dt:'還在回覆訊息、刷著社群動態，或腦中盤算明早的待辦清單？你的眼睛雖累了，但大腦的神經迴路還在高速公路上奔馳。'},
-    {k:'b',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M22 28v-6M19 22c-2-1-4-3-3-5M25 22c2-1 4-3 3-5M17 17c-1-2 0-3 1-2M27 17c1-2 0-3-1-2M19 28l-2 3M25 28l2 3" stroke="#3B6D11" stroke-width="1" stroke-linecap="round"/><ellipse cx="22" cy="21" rx="3" ry="2.5" stroke="#3B6D11" stroke-width="1" fill="none"/></svg>',nm:'一點風吹草動就驚醒',dt:'你可能已經躺下了，但你在聽家人的腳步聲、遠方的車聲，甚至能聽到自己的心跳？你像一隻在草叢中假寢的小鹿，隨時準備驚醒。'},
-    {k:'c',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M24 13l-6 10h6l-4 9 8-12h-6l2-7z" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',nm:'停不下來的焦慮與虛脫',dt:'明明身體已經累到像要散架，心臟卻跳得很快，甚至感到莫名的燥熱或胸悶？你感覺自己像一台過熱卻無法關機的精密儀器。'},
-    {k:'d',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M18 30c0-8 4-14 10-16-8 0-14 4-14 12M18 30c4-4 8-6 12-8" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round"/></svg>',nm:'已在盡力放鬆，與身體的隱隱對抗',dt:'你一直在調整枕頭高度、換姿勢，試圖安撫僵硬的肩頸、酸痛的腰背，或那種說不上來的身體沉重感與發炎燥熱？'}
-  ]},
-  {id:'q3',eye:'第三題 · 心靈調性',head:'現在的你，最想躲進哪種大自然的懷抱？',sub:'「氣味是記憶的語言，讓本能為你做選擇。」',
-   opts:[
-    {k:'A',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M26 15a8 8 0 1 0 0 14 6 6 0 0 1 0-14z" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round"/></svg>',nm:'東方101夜的神祕探索',eg:'木質 / 大地調',dt:'遠離浮躁的城市叢林，進入木質大地的幽深氛圍——沉香、乳香、大地樹脂的安穩感。'},
-    {k:'B',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M27 16a7 7 0 1 1-9 10 5 5 0 0 0 9-10z" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round"/></svg>',nm:'月光洗禮',eg:'花香 / 草本調',dt:'沉浸在花香草本的溫柔氛圍中——薰衣草、玫瑰、天竺葵，如月光般柔和包覆。'},
-    {k:'C',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><circle cx="22" cy="23" r="7" stroke="#3B6D11" stroke-width="1" fill="none"/><path d="M22 16v-3M25 14c-1-1-3-1-4 0" stroke="#3B6D11" stroke-width="1" stroke-linecap="round"/><path d="M22 16v14M15 23h14" stroke="#3B6D11" stroke-width="1" stroke-dasharray="2 2"/></svg>',nm:'午後果園與微風',eg:'柑橘 / 葉片調',dt:'微風搖過的果園煦光——柑橘、葉片的清新，輕盈而解壓，讓心情自然放鬆。'},
-    {k:'D',ic:'<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="20" stroke="#3B6D11" stroke-width="1"/><path d="M16 19h12l-1 9H17l-1-9z" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linejoin="round"/><path d="M28 21c2 0 3 1 3 2s-1 2-3 2M19 19v-2a3 3 0 0 1 6 0v2" stroke="#3B6D11" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M17 28h10" stroke="#3B6D11" stroke-width="1" stroke-linecap="round"/></svg>',nm:'窩在療癒茶屋',eg:'藥草 / 香料調',dt:'藥草、香料交織的溫暖氛圍——穗甘松、洋甘菊、雪藏杜鵑，像喝下一杯熱茶的安定感。'}
-  ]}
-];
-var RM={
-  '1A':{head:'落地東方・腦內劇院',poem:'腦中的腳步聲太響，是因為靈魂懸在半空。我們用最具落地感的能量，強行按住那台不停運轉的放映機。',oils:['岩蘭草','大西洋雪松']},
-  '1B':{head:'月光關機・腦內劇院',poem:'思考是乾枯的，我們需要一點溫潤的安撫。讓純淨的花香包裹你的邏輯，讓理智在柔軟中睡去。',oils:['高地真正薰衣草','希臘薰衣草']},
-  '1C':{head:'果園清零・腦內劇院',poem:'你可能陷入了重複的負面盤算。柑橘葉片的清香能切斷循環，讓沉重的思維變得輕盈起來。',oils:['佛手柑葉','苦橙葉']},
-  '1D':{head:'茶屋放手・腦內劇院',poem:'這種入睡困難帶有一種苦澀感。我們用帶有藥草氣息的穩定力，像喝下一杯熱茶，讓大腦放手。',oils:['穗甘松','重瓣羅馬洋甘菊']},
-  '2A':{head:'木牆守護・玻璃心靈',poem:'你的睡眠門檻太低，一點聲響就驚擾。我們需要日本檜木的堅固，為你的臥室築起一圈隱形的木牆。',oils:['日本檜木','臺灣柳杉葉']},
-  '2B':{head:'花瓣深海・玻璃心靈',poem:'這是神經脆弱的信號。用最頂級的花香修補受損的神經界線，讓你在花瓣的擁抱中沉入深海。',oils:['特級伊蘭','高地真正薰衣草']},
-  '2C':{head:'柑橘放衛・玻璃心靈',poem:'你的神經系統正處於過敏狀態。柑橘的愉悅感能降低戒備，讓你在不自覺中放鬆緊繃的聽覺。',oils:['粉紅葡萄柚','佛手柑FCF']},
-  '2D':{head:'厚毯壓夢・玻璃心靈',poem:'這是一種靈魂的寒冷。蛇麻草與洋甘菊的厚度，能像厚毯子一樣壓住你的不安，讓夢境紮實。',oils:['蛇麻草','重瓣羅馬洋甘菊']},
-  '3A':{head:'聖光平息・壓力型',poem:'長期的高壓讓你的身體像燃燒後的餘燼。乳香的聖光能平息急促的呼吸，把皮質醇推回正常水位。',oils:['乳香（索馬利蘭）','阿米香樹']},
-  '3B':{head:'玫瑰溶解・壓力型',poem:'你需要被寵愛。玫瑰與伊蘭能溶解那些因壓力而產生的憤怒與委屈，讓緊繃的心血管重新柔軟。',oils:['伊斯帕塔玫瑰原精','特級伊蘭']},
-  '3C':{head:'破冰自在・壓力型',poem:'你感到悶塞、胸口沉重。苦橙葉是心靈的破冰者，它能帶走焦慮，換成一種舒暢的自在。',oils:['苦橙葉','佛手柑葉']},
-  '3D':{head:'高山熄火・壓力型',poem:'你的壓力已轉化為身體的燥熱。雪藏杜鵑與穗甘松能帶來高山的清涼與定力，熄滅腎上腺的火。',oils:['藏地雪藏杜鵑','穗甘松']},
-  '4A':{head:'木質支撐・身體抗議',poem:'身體的結構正在僵持。柳杉與雪松的穿透力能滲透進緊繃的關節，讓僵硬的骨架重新找到支撐。',oils:['臺灣柳杉葉','大西洋雪松']},
-  '4B':{head:'溫掌安撫・身體抗議',poem:'疼痛讓你變得易怒。天竺葵能平衡神經與賀爾蒙，像溫暖的手心輕撫你發炎的部位。',oils:['岬角玫瑰天竺葵','高地真正薰衣草']},
-  '4C':{head:'流動減重・身體抗議',poem:'發炎的身體需要流動。葡萄柚的輕盈與佛手柑的平衡，能帶動身體能量的循環，減輕沉重感。',oils:['粉紅葡萄柚','佛手柑FCF']},
-  '4D':{head:'全面修復・身體抗議',poem:'這是最直接的生理安撫。洋甘菊是抗發炎的天選之子，搭配胡蘿蔔籽，全面修復疲累的組織。',oils:['重瓣羅馬洋甘菊','野生胡蘿蔔籽']}
-};
-var SM={
-  'a':{nm:"O'99 Fougère 28 · 馥奇夢境",dc:'28道靈動閃耀的晨曦微光。清新草本與針葉精準調和，如一層透氣薄紗，將枕間的雜訊清零。讓你彷彿躺在森林邊緣，隨月相的律動輕盈入夢。'},
-  'b':{nm:"O'99 Chypre 21 · 西普凝靜",dc:'21種天然單體構築的秩序感。西普調清冷的安全屏障，為過敏的感官建立一道隱形防護罩，讓你在清冷的秩序中，不被外界驚擾地沉入深眠。'},
-  'c':{nm:"O'99 Orienta 33 · 沉靜東方",dc:'33種精華織就的厚重東方調。如同在星光下點燃古老線香，能平息急促呼吸，把焦慮的心跳壓回平靜的頻率，是燥熱難眠夜晚最紮實的守護。'},
-  'd':{nm:"O'99 Orienta 33 · 沉靜東方",dc:'深邃東方木質與暖癒樹脂的包覆感。溫潤樹脂安撫生理的發炎感，厚實的底調像沉穩的大地接住你的疼痛，給身體一個可以真正放鬆的理由。'}
-};
-var ritual=['睡前 60 分鐘，將精油滴入電動擴香儀，讓植物分子先行溫潤整個空間','或稀釋於辣木籽油（Moringa Oil）中，輕輕按摩雙腳心，讓根部的能量落地','噴霧輕噴於枕頭背面，讓氣味在夜間緩緩陪伴而不過於直接','關燈後做三次深呼吸，讓嗅覺神經接收植物的訊號，引導神經系統切換'];
-var step=0,ans={};
 
-function dhSv(id){
-  var ids=['di','dqz','dtr','drs'];
-  for(var i=0;i<ids.length;i++){var e=document.getElementById(ids[i]);if(e){e.classList.remove('don');e.style.display='none';}}
-  var t=document.getElementById(id);
-  if(t){t.classList.add('don');t.style.display='';}
-  var top=document.getElementById('dq');
-  if(top)top.scrollIntoView({behavior:'smooth',block:'start'});
+// ── SOUND ENGINE ──
+var dhAC=null,dhMG=null,dhSon=false;
+function dhInitAudio(){
+  if(dhAC)return;
+  dhAC=new(window.AudioContext||window.webkitAudioContext)();
+  dhMG=dhAC.createGain();dhMG.gain.value=0;dhMG.connect(dhAC.destination);
+  // Singing bowl: fundamental + harmonics with slow beating
+  var freqs=[110,220,329.6,440,550];
+  freqs.forEach(function(f,i){
+    var osc=dhAC.createOscillator();
+    osc.type='sine';osc.frequency.value=f;
+    var g=dhAC.createGain();g.gain.value=[0.06,0.04,0.025,0.015,0.008][i];
+    // LFO for gentle pulsing
+    var lfo=dhAC.createOscillator();
+    lfo.frequency.value=0.04+i*0.01;
+    var lg=dhAC.createGain();lg.gain.value=g.gain.value*0.3;
+    lfo.connect(lg);lg.connect(g.gain);
+    lfo.start();osc.connect(g);g.connect(dhMG);osc.start();
+  });
+  // Subtle low wind
+  var buf=dhAC.createBuffer(1,dhAC.sampleRate*4,dhAC.sampleRate);
+  var d=buf.getChannelData(0);
+  for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1);
+  var src=dhAC.createBufferSource();src.buffer=buf;src.loop=true;
+  var filt=dhAC.createBiquadFilter();filt.type='lowpass';filt.frequency.value=120;
+  var wg=dhAC.createGain();wg.gain.value=0.008;
+  src.connect(filt);filt.connect(wg);wg.connect(dhMG);src.start();
+}
+function dhToggleSnd(){
+  dhInitAudio();
+  if(dhAC.state==='suspended')dhAC.resume();
+  dhSon=!dhSon;
+  var t=dhAC.currentTime;
+  dhMG.gain.cancelScheduledValues(t);
+  dhMG.gain.setValueAtTime(dhMG.gain.value,t);
+  dhMG.gain.linearRampToValueAtTime(dhSon?0.55:0,t+2);
+  var btn=document.getElementById('dh-snd-btn');
+  if(btn)btn.classList.toggle('dh-snd-on',dhSon);
+}
+function dhStartSnd(){
+  setTimeout(function(){
+    try{
+      dhInitAudio();
+      if(dhAC.state==='suspended')dhAC.resume();
+      if(!dhSon){
+        dhSon=true;
+        var t=dhAC.currentTime;
+        dhMG.gain.setValueAtTime(0,t);
+        dhMG.gain.linearRampToValueAtTime(0.55,t+3);
+        var btn=document.getElementById('dh-snd-btn');
+        if(btn)btn.classList.add('dh-snd-on');
+      }
+    }catch(e){}
+  },800);
 }
 
-function dhRend(s){
-  step=s;
-  var pf=document.getElementById('dpf');
-  if(pf)pf.style.width=Math.round(s/Qs.length*100)+'%';
-  var lbs=['dp0','dp1','dp2'];
-  for(var i=0;i<lbs.length;i++){var e=document.getElementById(lbs[i]);if(e)e.className='dpl'+(i===s?' dcur':i<s?' ddone':'');}
-  var q=Qs[s],sel=ans[q.id]||null;
-  var h='';
-  h+='<span class="dqeye">'+q.eye+'</span>';
-  h+='<span class="dqhead" style="display:block">'+q.head+'</span>';
-  h+='<span class="dqsub">'+q.sub+'</span>';
-  h+='<div class="dopts">';
-  for(var j=0;j<q.opts.length;j++){
-    var o=q.opts[j],isSel=sel===o.k;
-    h+='<button type="button" class="dopt'+(isSel?' dsel':'')+'" data-qid="'+q.id+'" data-k="'+o.k+'">';
-    h+='<span class="doptic">'+o.ic+'</span>';
-    h+='<span style="display:block"><span class="dopnm">'+o.nm+(o.eg?'<span class="dopeng">'+o.eg+'</span>':'')+'</span>';
-    h+='<span class="dopdt">'+o.dt+'</span></span></button>';
+// ── STARFIELD (outside #dq, no position:static conflict) ──
+function dhInitStars(){
+  var canvas=document.getElementById('dh-stars-canvas');
+  if(!canvas)return;
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  var ctx=canvas.getContext('2d');
+  var stars=[];
+  for(var i=0;i<260;i++){
+    stars.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*1.5+0.2,
+      a:Math.random()*0.8+0.1,
+      sp:Math.random()*0.005+0.001,
+      ph:Math.random()*Math.PI*2
+    });
   }
-  h+='</div>';
-  h+='<div class="dnav">';
-  h+='<button type="button" id="dbk" class="dbbk" style="visibility:'+(s===0?'hidden':'visible')+'">← 上一題</button>';
-  h+='<button type="button" id="dbn" class="dbnxt"'+(sel?'':' disabled')+'>'+( s<Qs.length-1?'下一題 →':'查看我的配方 →')+'</button>';
-  h+='</div>';
-  var qb=document.getElementById('dqb');if(qb)qb.innerHTML=h;
+  var fr=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(function(s){
+      var alpha=s.a*(0.5+0.5*Math.sin(fr*s.sp+s.ph));
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,240,'+alpha.toFixed(2)+')';
+      ctx.fill();
+    });
+    fr++;
+    requestAnimationFrame(draw);
+  }
+  draw();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ── Event delegation: no inline onclick needed ──
-document.addEventListener('click',function(e){
-  var t=e.target;
-  // start
-  var sb=document.getElementById('dh-start-btn');
-  if(sb&&(t===sb||sb.contains(t))){dhSv('dqz');dhRend(0);return;}
-  // option
-  var opt=t.closest?t.closest('[data-qid]'):null;
-  if(!opt&&t.dataset&&t.dataset.qid)opt=t;
-  if(opt){
-    var qid=opt.getAttribute('data-qid'),k=opt.getAttribute('data-k');
-    if(qid&&k){
-      ans[qid]=k;
-      var opts=document.querySelectorAll('#dqb .dopt');
-      for(var i=0;i<opts.length;i++)opts[i].classList.remove('dsel');
-      opt.classList.add('dsel');
-      var nb=document.getElementById('dbn');
-      if(nb)nb.removeAttribute('disabled');
-    }
-    return;
-  }
-  // next
-  var nb2=document.getElementById('dbn');
-  if(nb2&&(t===nb2||nb2.contains(t))){
-    if(!ans[Qs[step].id])return;
-    if(step<Qs.length-1){dhRend(step+1);}
-    else{dhSv('dtr');setTimeout(dhBR,1800);}
-    return;
-  }
-  // back
-  var bk=document.getElementById('dbk');
-  if(bk&&(t===bk||bk.contains(t))){if(step>0)dhRend(step-1);return;}
-  // restart
-  var rs=document.getElementById('drst');
-  if(rs&&(t===rs||rs.contains(t))){ans={};step=0;dhSv('dqz');dhRend(0);return;}
-},true);
-
-
-function dhBR(){
-  var q1=ans['q1']||'1',q2=ans['q2']||'a',q3=ans['q3']||'A';
-  var r=RM[q1+q3]||RM['1A'],sp=SM[q2]||SM['a'];
-  var q1n={1:'腦內劇院',2:'玻璃心靈',3:'壓力型失眠',4:'身體抗議'}[q1]||'';
-  var q3n={A:'木質大地',B:'月光花園',C:'午後果園',D:'療癒茶屋'}[q3]||'';
-  var h='<div class="drhero">';
-  h+='<span class="dreye">你的專屬晚安調飲已調配完成</span>';
-  h+='<span class="drtitle">'+r.head+'</span>';
-  h+='<span class="drsub">'+q1n+' × '+q3n+'</span>';
-  h+='<span class="drdesc">「'+r.poem+'」</span></div>';
-  h+='<div class="dslbl">精油複方</div>';
-  h+='<div class="docard"><span class="doch">'+r.oils[0]+' × '+r.oils[1]+'</span>';
-  h+='<span class="docp">'+r.poem+'</span>';
-  h+='<div class="dotags">';
-  for(var i=0;i<r.oils.length;i++)h+='<span class="dotag">'+r.oils[i]+'</span>';
-  h+='<span class="dotag dotagb">辣木籽油（稀釋基底）</span></div></div>';
-  h+='<div class="dslbl">O\'99 星璨舒眠微香霧</div>';
-  h+='<div class="dspcard"><span class="dspic">🌙</span><span style="display:block">';
-  h+='<span class="dspnm">'+sp.nm+'</span>';
-  h+='<span class="dspdc">'+sp.dc+'</span></span></div>';
-  h+='<div class="dslbl">芳療師的使用儀式</div>';
-  h+='<div class="drbox"><span class="drboxt">☽ 今晚的入眠步驟</span><ul class="drsteps">';
-  for(var j=0;j<ritual.length;j++)h+='<li>'+ritual[j]+'</li>';
-  h+='</ul></div>';
-  h+='<span class="dclosing">「在睡前的 1 小時，將配方滴入擴香儀，或稀釋於辣木籽油中輕輕按摩雙腳心。植物會帶你回家。」</span>';
-  h+='<button type="button" id="drst" class="dbreset">↺ 重新測驗</button>';
-  var rc=document.getElementById('drc');if(rc)rc.innerHTML=h;
-  dhSv('drs');
+function dhAnimTitle(){
+  dhInitStars();
+  var seq=[
+    {id:'dhi-btag',delay:300},
+    {id:'dhi-ded',delay:900},
+    {id:'dhi-title',delay:1600},
+    {id:'dhi-rule',delay:2400},
+    {id:'dhi-poem',delay:3000},
+    {id:'dhi-poem2',delay:4200},
+    {id:'dh-start-btn',delay:5300},
+    {id:'dhi-note',delay:5800}
+  ];
+  seq.forEach(function(item){
+    setTimeout(function(){
+      var el=document.getElementById(item.id);
+      if(el)el.classList.add('dhi-visible');
+    },item.delay);
+  });
 }
-})();
+
+// Wire start button — dismiss overlay and show quiz
+document.addEventListener('DOMContentLoaded',function(){
+  dhAnimTitle();
+  var btn=document.getElementById('dh-start-btn');
+  if(btn){
+    btn.addEventListener('click',function(){
+      dhStartSnd();
+      var overlay=document.getElementById('dh-intro-overlay');
+      if(overlay){
+        overlay.classList.add('dh-hiding');
+        setTimeout(function(){overlay.style.display='none';},1000);
+      }
+      dhSv('dqz');
+      dhRend(0);
+    });
+  }
+});
 </script>
 </body>
 </html>
